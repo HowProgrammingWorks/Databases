@@ -1,0 +1,11 @@
+{
+  "name": "dbms-application",
+  "version": "1.0.0",
+  "description": "DBMS Application Example",
+  "author": "Timur Shemsedinov <timur.shemsedinov@gmail.com>",
+  "license": "MIT",
+  "main": "application.js",
+  "dependencies": {
+    "pg": "^7.8.0"
+  }
+}
