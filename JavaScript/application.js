@@ -7,15 +7,14 @@ const pool = new Pool({
   port: 5432,
   database: 'application',
   user: 'marcus',
-  password: 'password',
+  password: 'marcus',
 })
 
-const sql = 'SELECT $1::text as message';
-const par = ['Hello'];
+const sql = 'SELECT * FROM pg_catalog.pg_tables where tablespace = $1';
+const par = ['pg_global'];
 const res = pool.query(sql, par, (err, res) => {
   if (err) {
     throw err;
   }
-  console.log(res.rows);
-  client.end();
+  console.table(res.rows);
 });
