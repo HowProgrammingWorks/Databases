@@ -10,22 +10,10 @@ const pool = new Pool({
   password: 'marcus',
 });
 
-const query = async (sql, values = []) => {
-  const startTime = new Date().getTime();
-  const res = await pool.query(sql, values);
-  const endTime = new Date().getTime();
-  const executionTime = endTime - startTime;
-  console.log(`Execution time: ${executionTime}`);
-  return res;
-};
-
-// Usage
-
 (async () => {
-  const fields = ['schemaname', 'tablename', 'tableowner', 'hasindexes'];
-  const sql = 'SELECT ' + fields.join(', ') +
-    ' FROM pg_catalog.pg_tables WHERE tableowner = $1';
-  const { rows } = await query(sql, ['marcus']);
+  const fields = ['schemaname', 'tablename', 'tableowner'].join(', ');
+  const sql = `SELECT ${fields} FROM pg_tables WHERE tableowner = $1`;
+  const { rows } = await pool.query(sql, ['marcus']);
   console.table(rows);
   pool.end();
 })();
