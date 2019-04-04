@@ -13,8 +13,9 @@ const pg = db.open({
 console.dir({ pg });
 
 pg.select('pg_tables')
-  .where({ tableowner: 'marcus' })
+  .where({ tableowner: 'marcus', schemaname: 'public' })
   .fields(['schemaname', 'tablename', 'tableowner', 'hasindexes'])
+  .order('tablename')
   .then(rows => {
     console.table(rows);
     pg.close();

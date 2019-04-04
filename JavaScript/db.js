@@ -59,6 +59,7 @@ class Cursor {
     this.whereClause = undefined;
     this.columns = ['*'];
     this.args = [];
+    this.orderBy = undefined;
   }
   resolve(result) {
     const { rows, fields, rowCount } = result;
@@ -84,33 +85,46 @@ class Cursor {
     this.mode = MODE_ROW;
     return this;
   }
-  col() { // TODO: name
+  col(name) {
     this.mode = MODE_COL;
+    this.columnName = name;
     return this;
   }
   count() {
     this.mode = MODE_COUNT;
     return this;
   }
+  order(name) {
+    this.orderBy = name;
+    return this;
+  }
   then(callback) {
-    const { table, columns, whereClause, args } = this;
+    // TODO: store callback to pool
+    const { mode, table, columns, args } = this;
+    const { whereClause, orderBy, columnName } = this;
     const fields = columns.join(', ');
     let sql = `SELECT ${fields} FROM ${table}`;
     if (whereClause) sql += ` WHERE ${whereClause}`;
+    if (orderBy) sql += ` ORDER BY ${orderBy}`;
     this.database.query(sql, args,  (err, res) => {
       this.resolve(res);
-      if (this.mode === MODE_VALUE) {
-        const col = this.cols[0];
-        const row = this.rows[0];
+      const { rows, cols } = this;
+      if (mode === MODE_VALUE) {
+        const col = cols[0];
+        const row = rows[0];
         callback(row[col.name]);
-      } else if (this.mode === MODE_ROW) {
-        callback(this.rows[0]);
-      } else if (this.mode === MODE_COL) {
-        // TODO: implement extract column
-      } else if (this.mode === MODE_COUNT) {
+      } else if (mode === MODE_ROW) {
+        callback(rows[0]);
+      } else if (mode === MODE_COL) {
+        const col = [];
+        for (const row of rows) {
+          col.push(row[columnName]);
+        }
+        callback(col);
+      } else if (mode === MODE_COUNT) {
         callback(this.rowCount);
       } else {
-        callback(this.rows);
+        callback(rows);
       }
     });
     return this;
@@ -130,6 +144,7 @@ class Database {
       values = [];
     }
     const startTime = new Date().getTime();
+    console.log({ sql, values });
     this.pool.query(sql, values, (err, res) => {
       const endTime = new Date().getTime();
       const executionTime = endTime - startTime;
@@ -146,7 +161,6 @@ class Database {
     this.pool.end();
   }
 }
-
 
 module.exports = {
   open: (config, logger) => new Database(config, logger),
