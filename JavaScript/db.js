@@ -61,43 +61,52 @@ class Cursor {
     this.args = [];
     this.orderBy = undefined;
   }
+
   resolve(result) {
     const { rows, fields, rowCount } = result;
     this.rows = rows;
     this.cols = fields;
     this.rowCount = rowCount;
   }
+
   where(conditions) {
     const { clause, args } = where(conditions);
     this.whereClause = clause;
     this.args = args;
     return this;
   }
+
   fields(list) {
     this.columns = list;
     return this;
   }
+
   value() {
     this.mode = MODE_VALUE;
     return this;
   }
+
   row() {
     this.mode = MODE_ROW;
     return this;
   }
+
   col(name) {
     this.mode = MODE_COL;
     this.columnName = name;
     return this;
   }
+
   count() {
     this.mode = MODE_COUNT;
     return this;
   }
+
   order(name) {
     this.orderBy = name;
     return this;
   }
+
   then(callback) {
     // TODO: store callback to pool
     const { mode, table, columns, args } = this;
