@@ -16,7 +16,7 @@ pg.select('pg_tables')
   .where({ tableowner: 'marcus', schemaname: 'public' })
   .fields(['schemaname', 'tablename', 'tableowner', 'hasindexes'])
   .order('tablename')
-  .then(rows => {
+  .then((rows) => {
     console.table(rows);
     pg.close();
   });

@@ -14,11 +14,11 @@ const fields = ['schemaname', 'tablename', 'tableowner', 'hasindexes'];
 const sql = 'SELECT ' + fields.join(', ') +
   ' FROM pg_catalog.pg_tables WHERE tableowner = $1';
 pool.query(sql, ['marcus'])
-  .then(res => {
+  .then((res) => {
     const { rows } = res;
     console.table(rows);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   })
   .finally(() => {

@@ -2,7 +2,7 @@
 
 const { Pool } = require('pg');
 
-const where = conditions => {
+const where = (conditions) => {
   let clause = '';
   const args = [];
   let i = 1;
