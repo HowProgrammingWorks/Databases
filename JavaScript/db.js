@@ -115,7 +115,7 @@ class Cursor {
     let sql = `SELECT ${fields} FROM ${table}`;
     if (whereClause) sql += ` WHERE ${whereClause}`;
     if (orderBy) sql += ` ORDER BY ${orderBy}`;
-    this.database.query(sql, args,  (err, res) => {
+    this.database.query(sql, args, (err, res) => {
       this.resolve(res);
       const { rows, cols } = this;
       if (mode === MODE_VALUE) {
