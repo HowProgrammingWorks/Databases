@@ -158,7 +158,7 @@ class Database {
       const endTime = new Date().getTime();
       const executionTime = endTime - startTime;
       console.log(`Execution time: ${executionTime}`);
-      if (callback) callback(err, res);
+      callback?.(err, res);
     });
   }
 
