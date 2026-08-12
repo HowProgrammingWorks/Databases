@@ -12,9 +12,9 @@ const pool = new Pool({
 
 const fields = ['schemaname', 'tablename', 'tableowner', 'hasindexes'];
 const list = fields.join(', ');
-const sql =
-  `SELECT ${list} FROM pg_catalog.pg_tables WHERE tableowner = $1`;
-pool.query(sql, ['marcus'])
+const sql = `SELECT ${list} FROM pg_catalog.pg_tables WHERE tableowner = $1`;
+pool
+  .query(sql, ['marcus'])
   .then((res) => {
     const { rows } = res;
     console.table(rows);
